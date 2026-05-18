@@ -20,3 +20,7 @@ client = RtrtClient(SessionCredentials.new_session("appid"))
 resolution = resolve_ulink(client, "https://rtrt.me/ulink/...")
 provider = RtrtProvider(client)
 ```
+
+## License
+
+MIT License. See [LICENSE](LICENSE).
