@@ -3,6 +3,22 @@ from __future__ import annotations
 from racedata.core.models import Course
 
 
+def event_display_name_from_conf(conf: dict) -> str | None:
+    nested = conf.get("conf")
+    if isinstance(nested, dict):
+        name = str(nested.get("name") or "").strip()
+        if name:
+            return name
+
+    vconf = conf.get("vconf")
+    if isinstance(vconf, dict):
+        for key in ("desc", "shortName"):
+            value = str(vconf.get(key) or "").strip()
+            if value:
+                return value
+    return None
+
+
 def course_labels_from_conf(conf: dict) -> dict[str, str]:
     labels: dict[str, str] = {}
     allpoints = conf.get("tools", {}).get("allpoints", [])
