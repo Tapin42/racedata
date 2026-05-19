@@ -6,7 +6,7 @@ from racedata.core.split_filter import (
     filter_splits_by_course,
     main_point_names_from_conf,
 )
-from racedata.core.timing import normalize_segment_rows
+from racedata.core.timing import is_blocked_label, normalize_segment_rows
 from racedata.providers.rtrt.client import RtrtClient
 from racedata.providers.rtrt.points import (
     course_labels_from_conf,
@@ -83,7 +83,11 @@ class RtrtProvider:
         if course_id is None and raw_rows:
             course_id = default_course_from_splits(raw_rows)
 
-        normalized = normalize_segment_rows(raw_rows, course_id=course_id)
+        normalized = [
+            split
+            for split in normalize_segment_rows(raw_rows, course_id=course_id)
+            if not is_blocked_label(split.label)
+        ]
         if not collapse_intermediates:
             return normalized
 
