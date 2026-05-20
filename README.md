@@ -1,6 +1,6 @@
 # racedata
 
-Provider-agnostic race timing data library. RTRT.me is the first backend.
+Provider-agnostic race timing data library. Backends: RTRT.me and Sportstats (`sportstats.one`).
 
 ## Install
 
@@ -12,14 +12,18 @@ pytest
 ## Usage
 
 ```python
-from racedata.providers.rtrt.client import RtrtClient, SessionCredentials
-from racedata.providers.rtrt.service import RtrtProvider
-from racedata.providers.rtrt.ulink import credentials_for_ulink, resolve_ulink
+from racedata.providers.factory import provider_for_race
+from racedata.resolve import resolve_share_url
 
-client = RtrtClient(SessionCredentials.new_session("appid"))
-resolution = resolve_ulink(client, "https://rtrt.me/ulink/...")
-provider = RtrtProvider(client)
+resolution = resolve_share_url("https://sportstats.one/event/.../leaderboard/146818")
+provider = provider_for_race(
+    resolution.race,
+    rtrt_credentials=resolution.credentials,
+    sportstats_cols=resolution.checkpoint_cols,
+)
 ```
+
+RTRT ulinks and Sportstats leaderboard URLs are detected automatically. Optional env: `SPORTSTATS_API_KEY` for single-athlete lookups.
 
 ## License
 
