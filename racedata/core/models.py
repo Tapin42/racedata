@@ -12,6 +12,15 @@ class Race:
 
 
 @dataclass(frozen=True)
+class ScheduledEvent:
+    event_key: str
+    display_name: str
+    date: str
+    earliest_start_time: int | None = None
+    distance: str | None = None
+
+
+@dataclass(frozen=True)
 class Course:
     id: str
     label: str

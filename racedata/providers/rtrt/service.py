@@ -8,6 +8,8 @@ from racedata.core.split_filter import (
 )
 from racedata.core.timing import is_blocked_label, normalize_segment_rows
 from racedata.providers.rtrt.client import RtrtClient
+from racedata.core.models import ScheduledEvent
+from racedata.providers.rtrt.events import filter_ironman_703_events, list_upcoming_events
 from racedata.providers.rtrt.points import (
     course_labels_from_conf,
     default_course_from_splits,
@@ -125,6 +127,10 @@ class RtrtProvider:
 
     def fetch_category_splits(self, url: str, *, max_results: str = "2000") -> dict:
         return self.client.post(url, {"max": max_results})
+
+    def list_upcoming_ironman_703_events(self) -> list[ScheduledEvent]:
+        events = list_upcoming_events(self.client)
+        return filter_ironman_703_events(events)
 
     def detect_courses_in_splits(
         self,

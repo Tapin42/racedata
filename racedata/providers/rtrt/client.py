@@ -75,3 +75,15 @@ class RtrtClient:
         response = requests.get(url, params=params, timeout=20)
         response.raise_for_status()
         return response.text
+
+    def get_json(self, url: str, *, params: dict | None = None) -> dict:
+        self.register_session()
+        merged = {"appid": self.credentials.app_id, "token": self.credentials.token}
+        if params:
+            merged.update(params)
+        response = requests.get(url, params=merged, timeout=20)
+        response.raise_for_status()
+        result = response.json()
+        if not isinstance(result, dict):
+            raise RuntimeError("RTRT payload is not an object")
+        return result
